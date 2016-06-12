@@ -54,7 +54,7 @@ class IsolateRunner implements Runner {
   /// The created isolate is set to have errors not be fatal.
   static Future<IsolateRunner> spawn() async {
     var channel = new SingleResponseChannel();
-    var isolate = await Isolate.spawn(IsolateRunnerRemote._create,
+    var isolate = await Isolate.spawn(IsolateRunnerRemote.create,
                                       channel.port);
     // The runner can be used to run multiple independent functions.
     // An accidentally uncaught error shouldn't ruin it for everybody else.
@@ -272,6 +272,8 @@ class IsolateRunnerRemote {
   /// Use this as argument to [new IsolateRunner] if creating the link
   /// manually, otherwise it's handled by [IsolateRunner.spawn].
   SendPort get commandPort => _commandPort.sendPort;
+
+  static void create(SendPort initPort) => _create(initPort);
 
   static void _create(SendPort initPort) {
     var remote = new IsolateRunnerRemote();
